@@ -1,41 +1,28 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from '@/App'
+import router from '@/router.js'
 
 import Vant from 'vant'
 import 'vant/lib/index.css'
+import 'amfe-flexible/index.js'
+import store from '@/store'
+import VeeValidate, { Validator } from 'vee-validate'
+import ar from 'vee-validate/dist/locale/zh_CN'
+Vue.use(VeeValidate)
+
+Validator.localize('ar', ar)
+
+Validator.extend('phone', {
+  getMessage: field => field + '格式不正确',
+  validate: value => value.length === 11 && /^((13|15|16|17|18|19)[0-9]{1})\d{8}$/.test(value)
+})
+
 Vue.use(Vant)
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
-  // 声明数据用 的    也就是在data中原先写入的数据
-  state: {
-    name: '张三',
-    age: 20,
-    gender: '男'
-  },
-  //   异步调用使用的
-  actions: {
-    fn (store) {
-      console.log(store)
-      setTimeout(() => {
-        const name = '刘'
-        store.commit('setName', name)
-      }, 1000)
-    }
-  },
-  mutations: {
-    setName (state, data) {
-      state.age = 25
-      console.log(data)
-      console.log(state)
-      state.name = data
-    }
-
-  }
-})
-
 new Vue({
+  router,
   store,
   render: h => h(App)
 }).$mount('#app')
